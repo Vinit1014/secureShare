@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.11.5",
     "@next-auth/supabase-adapter": "^0.2.1",
     "@supabase/auth-helpers-nextjs": "^0.9.0",
+    "@supabase/ssr": "^0.1.0",
     "@supabase/supabase-js": "^2.42.0",
     "framer-motion": "^11.0.24",
     "next": "14.1.4",
