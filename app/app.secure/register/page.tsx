@@ -13,20 +13,57 @@ const page = () => {
     const router = useRouter()
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    
+    const [privateKey,setPrivateKey] = useState("");
     const supabase = createClientComponentClient();
+
+    useEffect(()=>{
+        generatePrivateKey();
+    },[])
+
+    useEffect(()=>{
+        console.log(privateKey);
+    },[privateKey])
+
+    const generatePrivateKey = ()=>{
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let privateKey = '';
+        const keyLength = 8;
+        for (let i = 0; i < keyLength; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        privateKey += characters.charAt(randomIndex);
+        }
+        setPrivateKey(privateKey);
+        console.log(privateKey);
+    }
     
     const handleSignUp = async () => {
-      const res = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${location.origin}/auth/callback`
-          }
-      })
-      router.refresh();
-      setEmail('')
-      setPassword('')
+        const res = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                emailRedirectTo: `${location.origin}/auth/callback`
+            }
+        })
+        // generatePrivateKey();
+        router.refresh();
+        setEmail('')
+        setPassword('')
+        try{
+            await fetch("/api/authe",{
+            method:"POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body:JSON.stringify({
+                email: email,
+                password: password,
+                private_key:privateKey
+            }),
+            })        
+        }
+        catch(error){
+            console.log(error);
+        }
     }
 
   return (
