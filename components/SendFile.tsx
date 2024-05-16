@@ -1,12 +1,13 @@
-'use client'
+'use-client'
+
 import { supabase } from "@/utils/supabase"
 import React, { useState,useEffect } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { User } from "next-auth";
-import Inbox from "@/components/Inbox";
-import SendFile from "@/components/SendFile";
+import Fileselect from "./Fileselect";
 
-const Present = () => {
+const SendFile = () => {
+
     const [email,setEmail] = useState<any>(null);
     const [fetchError,setFetchError] = useState('');
     const [loading, setLoading] = useState(true);
@@ -61,6 +62,21 @@ const Present = () => {
     useEffect(()=>{
         console.log(email);
     },[email])
+
+
+    const handleSearchChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+        setSearchTerm(e.target.value);
+    };
+    
+    const filteredEmails = email?.filter((email: { email: string; }) =>
+        email.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );   
+
+    const selectedEmailFun = (em:any)=>{
+        console.log("Selectedddddd "+em);
+        setSelectedEmail(em);
+        setSearchTerm('')
+    }
     
     const changeType = ()=>{
         setSelectS(true);
@@ -69,25 +85,29 @@ const Present = () => {
     const changeType1 = ()=>{
         setSelectS(false);
     }
+
     return (
-        <>
-            <div className='grid grid-cols-2 mx-36 mt-20 border-2 border-grey-200 rounded-lg cursor-pointer'>
-                <div onClick={changeType} className={selectS ? "p-2 mr-4 bg-green-300 rounded-lg font-bold text-green-900  text-center": " p-2 font-bold rounded-lg text-green-900  text-center"} >Send File</div>
-                <div onClick={changeType1} className={selectS ? "p-2 rounded-lg font-bold text-green-900  text-center": "p-2 font-bold bg-green-300 rounded-lg text-green-900  text-center"}>Inbox</div>
-            </div>
-            <div className=" border-2 border-red-400 mx-36 h-96 rounded-md shadow-md grid grid-cols-3">
-                {/* <h1 className="border-blue-400 border-2">Welcome</h1> */}
-                {selectS ? 
-                    <SendFile/>
-                :
-                <>
-                    <Inbox/>
-                </>
-                    }
-                
-            </div>
-        </>
-    )
+    <>
+        <div className="border-purple-400 border-2">
+            <input placeholder="Search for sender's email" className="w-72 border-gray-200 border-2 p-1 m-2 ml-4 focus:outline-none shadow-md focus:border-gray-300 focus:border-2 rounded-md" value={searchTerm} onChange={handleSearchChange}/>
+                    {searchTerm && 
+            <ul className="p-1 w-72 m-2 ml-4 shadow-md">
+            {filteredEmails.map((email: { id: React.Key | null | undefined;  email: string | number | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) => (
+                <li className="p-1  m-0 cursor-pointer" key={email.id} onClick={()=>{selectedEmailFun(email.email)}}>
+                {email.email}
+                <hr></hr>
+                </li>
+            ))}
+                            
+            </ul>}
+        </div>
+        <div className="border-blue-400 border-2 w-full col-span-2">
+                <h1 className="font-bold m-2 p-1">To {selectedEmail}</h1>
+                    <Fileselect email={selectedEmail}/>
+                        {/* <h1>Hello</h1> */}
+        </div>      
+    </>
+  )
 }
 
-export default Present
+export default SendFile

@@ -4,6 +4,7 @@ import { User } from 'next-auth'
 import { useRouter } from 'next/navigation';
 import Present from './present';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import Navbar from '@/components/Navbar';
 
 const AppSecurePage = () => {
   const [user, setUser] = useState<User|null>(null);
@@ -37,7 +38,7 @@ const AppSecurePage = () => {
     let { error } = await supabase.auth.signOut()
     router.refresh();
   }
-
+  
   // const fetchUsers = async()=>{
   //   await fetch("/api/authe"),{
   //     method:"GET",
@@ -46,11 +47,9 @@ const AppSecurePage = () => {
   
   return (  
     <>
-    {/* <h3>This is your timeline: {session?.user?.name}</h3> */}
+      <Navbar email={user?.email} handleFun={handleLogout}/>
       <div>page to be rendered after authentication</div>
       <h1>hello</h1>
-      <button type="submit" onClick={handleLogout} className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Log out</button>
-      
       <Present/>
     </>
   )
