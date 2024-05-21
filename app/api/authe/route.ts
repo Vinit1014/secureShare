@@ -1,6 +1,6 @@
 import { supabase } from "@/utils/supabase";
-// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { NextResponse } from "next/server";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export async function GET(req:Request, res:Response){
     let { data: User, error } = await supabase
@@ -48,7 +48,7 @@ export async function POST(req:Request){
             console.log("Not inserted");
             return NextResponse.json({"message":"Not inserted"},{status:400})
         }
-
+        
     }catch(error){
         console.log(error);
         return NextResponse.json(error);

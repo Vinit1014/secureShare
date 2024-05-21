@@ -19,10 +19,13 @@
     "@supabase/ssr": "^0.1.0",
     "@supabase/supabase-js": "^2.42.0",
     "framer-motion": "^11.0.24",
+    "lucide-react": "^0.378.0",
     "next": "14.1.4",
     "next-auth": "^4.24.7",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "sonner": "^1.4.41",
+    "sooner": "^1.1.4"
   },
   "devDependencies": {
     "@types/node": "^20",

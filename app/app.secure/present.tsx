@@ -5,56 +5,84 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { User } from "next-auth";
 import Inbox from "@/components/Inbox";
 import SendFile from "@/components/SendFile";
+import { Toaster, toast } from 'sonner';
+import { Copy } from 'lucide-react';
 
 const Present = () => {
     const [email,setEmail] = useState<any>(null);
+    const [privateKey, setPrivateKey] = useState<any>('');
+    const [changeP,setChangeP] = useState(false);
+    const [toastShown, setToastShown] = useState(false);
+
     const [fetchError,setFetchError] = useState('');
     const [loading, setLoading] = useState(true);
     const [selectS,setSelectS] = useState(true);
     const [user, setUser] = useState<User|null>(null);
     const supa = createClientComponentClient();
 
-    const [selectedEmail,setSelectedEmail] = useState<any>();
-    const [searchTerm, setSearchTerm] = useState('');
-
     useEffect(()=>{
         console.log(selectS);
     },[selectS])
-    useEffect(()=>{
-        async function getUser(){
-            const {data: {user}} = await supa.auth.getUser()
-            setUser(user)
-            setLoading(false)
-        }
-        getUser();   
-    },[])
 
     useEffect(()=>{
-        setTimeout(()=>{
-            const fetchEmail = async()=>{
-                // console.log("User is "+user);
-                
-                let { data, error } = await supabase
-                .from('User')
-                .select('email')
-                // .neq('email', 'qwert@gmail.com')
-                .neq('email', user?.email)
-                
-                console.log(data);
-                
-                if (error) {
-                    setFetchError('Could not fetch data')
-                    console.log("Could not fetch "+error);
-                }
+        async function getUser(){
+            const { data: { user } } = await supa.auth.getUser();
+            setUser(user);
+            setLoading(false);
+        }
+        getUser();    
+    }, []);
     
-                if (data) {
-                    setEmail(data)
+    useEffect(()=>{
+        if (changeP && privateKey && !toastShown) {
+            toast('Use this private key to download files', {
+                description: 'Private key is ' + privateKey[0]?.private_key ,
+                // description:(
+                //     <div>
+                //         <span>Private key is {privateKey[0]?.private_key}</span>
+                //         <Copy />
+                //     </div>
+                // ),
+                
+            });
+            setToastShown(true);
+        }
+    }, [changeP, privateKey, toastShown]);
+    
+    useEffect(()=>{
+        if (user) {
+            setTimeout(async () => {
+                try {
+                    const { data: privateKeyData, error: privateKeyError } = await supabase
+                        .from('User')
+                        .select('private_key')
+                        .eq('email', user.email);
+                    
+                    if (privateKeyError) {
+                        setFetchError('Could not fetch private key');
+                        console.error("Could not fetch private key", privateKeyError);
+                    } else {
+                        setPrivateKey(privateKeyData);
+                        setChangeP(true);
+                    }
+                    
+                    const { data: emailData, error: emailError } = await supabase
+                        .from('User')
+                        .select('email')
+                        .neq('email', user.email);
+                    
+                    if (emailError) {
+                        setFetchError('Could not fetch email data');
+                        console.error("Could not fetch email data", emailError);
+                    } else {
+                        setEmail(emailData);
+                    }
+                } catch (error) {
+                    console.error('Error fetching data', error);
                 }
-            }
-            
-            fetchEmail();
-        },1000)
-    },[user])
+            }, 1000);
+        }
+    }, [user]);
 
     console.log({loading, user})
 
@@ -62,6 +90,10 @@ const Present = () => {
         console.log(email);
     },[email])
     
+    useEffect(()=>{
+        console.log(privateKey);
+    },[privateKey])
+
     const changeType = ()=>{
         setSelectS(true);
     }
@@ -69,8 +101,10 @@ const Present = () => {
     const changeType1 = ()=>{
         setSelectS(false);
     }
+
     return (
         <>
+            <Toaster  closeButton />
             <div className='grid grid-cols-2 mx-36 mt-20 border-2 border-grey-200 rounded-lg cursor-pointer'>
                 <div onClick={changeType} className={selectS ? "p-2 mr-4 bg-green-300 rounded-lg font-bold text-green-900  text-center": " p-2 font-bold rounded-lg text-green-900  text-center"} >Send File</div>
                 <div onClick={changeType1} className={selectS ? "p-2 rounded-lg font-bold text-green-900  text-center": "p-2 font-bold bg-green-300 rounded-lg text-green-900  text-center"}>Inbox</div>
@@ -82,6 +116,7 @@ const Present = () => {
                 :
                 <>
                     <Inbox/>
+                    <Copy />
                 </>
                     }
                 

@@ -17,9 +17,9 @@ const AppSecurePage = () => {
           setUser(user)
           setLoading(false)
       }
-      
+          
       getUser();
-  }, [])
+    }, [])
   
   // console.log({loading, user})
 
@@ -47,6 +47,7 @@ const AppSecurePage = () => {
   
   return (  
     <>
+      
       <Navbar email={user?.email} handleFun={handleLogout}/>
       <div>page to be rendered after authentication</div>
       <h1>hello</h1>

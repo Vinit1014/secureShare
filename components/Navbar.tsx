@@ -3,16 +3,6 @@ import React from 'react'
 
 const Navbar = (props: { email: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined, handleFun:any }) => {
 
-
-  // function deleteTokenFromCookies() {
-  //   document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  // }
-
-  // const handleLogOut = ()=>{
-  //   console.log("Logout implemented");
-  //   deleteTokenFromCookies();
-  // }
-
   return (
     <div className="flex justify-center">
         <div className="flex border font-medium text-[24px] px-3 py-1 m-2 rounded-lg w-full items-center justify-between">

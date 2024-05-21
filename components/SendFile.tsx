@@ -11,16 +11,12 @@ const SendFile = () => {
     const [email,setEmail] = useState<any>(null);
     const [fetchError,setFetchError] = useState('');
     const [loading, setLoading] = useState(true);
-    const [selectS,setSelectS] = useState(true);
     const [user, setUser] = useState<User|null>(null);
     const supa = createClientComponentClient();
 
     const [selectedEmail,setSelectedEmail] = useState<any>();
     const [searchTerm, setSearchTerm] = useState('');
-
-    useEffect(()=>{
-        console.log(selectS);
-    },[selectS])
+    
     useEffect(()=>{
         async function getUser(){
             const {data: {user}} = await supa.auth.getUser()
@@ -73,17 +69,9 @@ const SendFile = () => {
     );   
 
     const selectedEmailFun = (em:any)=>{
-        console.log("Selectedddddd "+em);
+        // console.log("Selectedddddd "+em);
         setSelectedEmail(em);
         setSearchTerm('')
-    }
-    
-    const changeType = ()=>{
-        setSelectS(true);
-    }
-
-    const changeType1 = ()=>{
-        setSelectS(false);
     }
 
     return (
@@ -103,7 +91,7 @@ const SendFile = () => {
         </div>
         <div className="border-blue-400 border-2 w-full col-span-2">
                 <h1 className="font-bold m-2 p-1">To {selectedEmail}</h1>
-                    <Fileselect email={selectedEmail}/>
+                    <Fileselect sender={user} email={selectedEmail}/>
                         {/* <h1>Hello</h1> */}
         </div>      
     </>
