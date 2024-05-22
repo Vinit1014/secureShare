@@ -115,7 +115,7 @@ const Present = () => {
                     <SendFile/>
                 :
                 <>
-                    <Inbox/>
+                    <Inbox loggedUser={user?.email}/>
                     <Copy />
                 </>
                     }

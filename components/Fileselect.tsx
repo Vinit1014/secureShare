@@ -11,7 +11,7 @@ const Fileselect = ({ sender, email }) => {
     const [prS,setPrs] = useState<any>('');
     const [prR,setPrR] = useState<any>('');
     const [file, setFile] = useState<any>();
-    const fileInputRef = useRef(null);
+    const fileInputRef = useRef<any>(null);
     // const [combine,setCombine] = useState<any>('');
 
     useEffect(()=>{
@@ -59,7 +59,7 @@ const Fileselect = ({ sender, email }) => {
             console.error('Error fetching data', error);
         }
     };
-
+    
     useEffect(() => {
         if (currentSender && currentEmail) {
             setURLP();
