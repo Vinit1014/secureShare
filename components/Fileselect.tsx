@@ -1,7 +1,7 @@
 'use-client'
 
 import { Button } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/utils/supabase';
 import { Toaster, toast } from 'sonner';
 
@@ -11,6 +11,7 @@ const Fileselect = ({ sender, email }) => {
     const [prS,setPrs] = useState<any>('');
     const [prR,setPrR] = useState<any>('');
     const [file, setFile] = useState<any>();
+    const fileInputRef = useRef(null);
     // const [combine,setCombine] = useState<any>('');
 
     useEffect(()=>{
@@ -72,31 +73,48 @@ const Fileselect = ({ sender, email }) => {
     };
     
     const sendFileFun = async()=>{
-        // const {data,error} = await supabase
-        // .storage
-        // .from('bucket')
-        // .upload(prR[0]?.private_key+prS[0]?.private_key+'/'+file.name,file)
-        try {
-            await fetch("/api/sentfile",{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body:JSON.stringify({
-                    send_file_to: currentEmail 
-                }),
-            })
-        } catch (error) {
-            console.log(error);
+        if (!file) {
+            toast.error("No file selected");
+            return;
         }
 
-        // if (data) {
-        //     toast.success('Successfully send')
-        // }
-        // else{
-        //     toast.error("Error sending file")
-        //     console.log(error);        
-        // }
+        if (prR=="") {
+            toast.error("Select the sender to whom you want to send")  
+            return; 
+        }
+        else{
+
+            const {data,error} = await supabase
+            .storage
+            .from('bucket')
+            .upload(prR[0]?.private_key+prS[0]?.private_key+'/'+file.name,file)
+    
+            try {
+                await fetch("/api/sentfile",{
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body:JSON.stringify({
+                        send_file_to: currentEmail,
+                        sender:currentSender 
+                    }),
+                })
+            } catch (error) {
+                console.log(error);
+            }
+    
+            if (data) {
+                toast.success('Successfully sent')
+                setFile(null);
+                setCurrentEmail("")
+                fileInputRef.current.value = "";
+            }
+            else{
+                toast.error("Error sending file")
+                console.log(error);        
+            }
+        }
     }
 
     return (
@@ -104,6 +122,7 @@ const Fileselect = ({ sender, email }) => {
             <Toaster richColors  />
             <p className="font-bold text-xl mx-6 p-1">Upload the file to send</p>
             <input
+                ref={fileInputRef}
                 className="mx-1 my-4 block w-full text-sm text-slate-500
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-full file:border-0
