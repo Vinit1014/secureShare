@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Download } from 'lucide-react';
 import { supabase } from '@/utils/supabase';
+import { Toaster, toast } from 'sonner';
 
 const Inbox = ({loggedUser}) => {
 
@@ -10,10 +11,16 @@ const Inbox = ({loggedUser}) => {
     const [prS,setPrS] = useState<any>('')
     const [prR,setPrR] = useState<any>('')
     const [fileArray,setFileArray] = useState<any>([]);
+    const [link, setLink] = useState<any>('');
 
     useEffect(()=>{
         console.log(fileArray);
     },[fileArray])
+
+    useEffect(()=>{
+        console.log("The link is "+link);
+        
+    },[link])
 
     useEffect(()=>{
         console.log("Sender private key is "+prS[0]?.private_key);
@@ -96,7 +103,7 @@ const Inbox = ({loggedUser}) => {
         }
     };
 
-    const fetchFiles = async (senderPrivateKey, receiverPrivateKey) => {
+    const fetchFiles = async (senderPrivateKey:any, receiverPrivateKey:any) => {
         try {
             const { data, error } = await supabase
                 .storage
@@ -106,7 +113,9 @@ const Inbox = ({loggedUser}) => {
             if (error) {
                 console.log("Error fetching files: ", error);
             } else {
-                setFileArray(data);
+                if(data && data.length>0){
+                    setFileArray(data);
+                }
             }
         } catch (error) {
             console.error('Error fetching files', error);
@@ -117,10 +126,34 @@ const Inbox = ({loggedUser}) => {
         console.log("Clicked " + email);
         fetchPrivateKeys(email);
     }
+
+    const handleDownload = async(name:any)=>{
+        console.log("Clicked "+name);
+        console.log(`${prR[0].private_key}`+`${prS[0].private_key}`+`/${name}`);
+        
+        // const loadingToastId = toast.loading('Downloading...');
+        const { data } = supabase
+        .storage
+        .from('bucket')
+        .getPublicUrl(`${prR[0].private_key}`+`${prS[0].private_key}`+`/${name}`,{
+            download: true
+        })
+        // .getPublicUrl('IbNdiJvfJjxumScf'+'/try1.txt',{
+        //     download: true
+        // })
+
+        if (data) {
+            // toast.dismiss(loadingToastId);
+            setLink(data.publicUrl)
+            toast.success("Downloaded successfully")
+            console.log('Download link set');            
+        }
+    }
     
     return (
         <>
             <div className="border-purple-400 border-2">
+                <Toaster richColors/>
                 <ul className="p-1 w-84 m-4 shadow-md border-2 border-red-950">
                     {inbox && inbox.map((name:any,index:number)=>{
                         return(
@@ -133,16 +166,20 @@ const Inbox = ({loggedUser}) => {
                 </ul>
             </div>
             <div className="border-blue-400 border-2 w-full col-span-2">
-                <div className='border-2 p-4 border-red-400 flex justify-between'>
-                    <div>
-                        File name 1
-                    </div>
-                    <div>
-                        <Download/>
-                    </div>
-                </div>
-
-                <div className='border-2 p-4 border-red-400'>File name 2</div> 
+                    {fileArray && fileArray.map((name:any,index:number)=>{
+                        return(
+                            <>
+                                <div key={index} className='border-2 p-4 border-red-400 flex justify-between'>
+                                    {name.name}
+                                    <div onClick={()=>{(handleDownload(name.name));
+                                    }}>
+                                        <a href={link} download><Download/></a>
+                                    </div>
+                                </div>
+                            </>
+                        )
+                    })}
+                
             </div>   
     </>
   )

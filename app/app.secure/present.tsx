@@ -116,7 +116,7 @@ const Present = () => {
                 :
                 <>
                     <Inbox loggedUser={user?.email}/>
-                    <Copy />
+                    {/* <Copy /> */}
                 </>
                     }
                 
