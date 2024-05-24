@@ -14,7 +14,7 @@ const AppSecurePage = () => {
   const [loading, setLoading] = useState(true);
   const supabase = createClientComponentClient();
   const router = useRouter();
-  
+
   useEffect(() => {
       async function getUser(){
           const {data: {user}} = await supabase.auth.getUser()
@@ -56,10 +56,8 @@ const AppSecurePage = () => {
   
   return (  
     <>
-      <Toaster richColors closeButton position="top-center" />
+      <Toaster richColors />
       <Navbar email={user?.email} handleFun={handleLogout}/>
-      <div>page to be rendered after authentication</div>
-      <h1>hello</h1>
       <Present/>
     </>
   )

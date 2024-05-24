@@ -5,6 +5,7 @@ import React, { useState,useEffect } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { User } from "next-auth";
 import Fileselect from "./Fileselect";
+import { Toaster } from "sonner";
 
 const SendFile = () => {
     
@@ -76,7 +77,8 @@ const SendFile = () => {
 
     return (
     <>
-        <div className="border-purple-400 border-2">
+        {/* <Toaster richColors /> */}
+        <div className="border-gray-200 border-2">
             <input placeholder="Search for sender's email" className="w-72 border-gray-200 border-2 p-1 m-2 ml-4 focus:outline-none shadow-md focus:border-gray-300 focus:border-2 rounded-md" value={searchTerm} onChange={handleSearchChange}/>
                     {searchTerm && 
             <ul className="p-2 w-72 m-2 ml-4 shadow-xl max-h-60 overflow-auto">
@@ -89,7 +91,7 @@ const SendFile = () => {
                             
             </ul>}
         </div>
-        <div className="border-blue-400 border-2 w-full col-span-2">
+        <div className="border-gray-200 border-2 w-full col-span-2">
                 {/* <h1 className="font-bold m-2 p-1">To {selectedEmail}</h1> */}
                     <Fileselect sender={user} email={selectedEmail}/>
                         {/* <h1>Hello</h1> */}

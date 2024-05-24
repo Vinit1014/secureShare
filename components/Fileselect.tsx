@@ -1,9 +1,9 @@
-'use-client'
+'use client'
 
 import { Button } from '@chakra-ui/react';
 import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/utils/supabase';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 
 const Fileselect = ({ sender, email }) => {
     const [currentSender, setCurrentSender] = useState(sender?.email);
@@ -118,7 +118,7 @@ const Fileselect = ({ sender, email }) => {
 
     return (
         <div className='shadow-xl shadow-gray-400 w-96 h-72 m-12 mx-48 flex flex-col items-center'>
-            <Toaster richColors />
+            
             <p className="font-bold text-blue-900 text-xl p-2 m-2 text-center">Upload the file to send</p>
             {currentEmail && <p className='text-blue-900'>To {currentEmail}</p>}
             <input

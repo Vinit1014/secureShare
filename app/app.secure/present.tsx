@@ -32,20 +32,20 @@ const Present = () => {
             setLoading(false);
         }
         getUser();    
+        // toast.success("Hello")
     }, []);
     
     useEffect(()=>{
         if (changeP && privateKey && !toastShown) {
             toast('Use this private key to download files', {
                 description: 'Private key is ' + privateKey[0]?.private_key ,
-                // description:(
-                //     <div>
-                //         <span>Private key is {privateKey[0]?.private_key}</span>
-                //         <Copy />
-                //     </div>
-                // ),
-                
             });
+            // description:(
+            //     <div>
+            //         <span>Private key is {privateKey[0]?.private_key}</span>
+            //         <Copy />
+            //     </div>
+            // ),
             setToastShown(true);
         }
     }, [changeP, privateKey, toastShown]);
@@ -105,6 +105,7 @@ const Present = () => {
 
     return (
         <>
+            
             <div className='grid grid-cols-2 mx-36 mt-20 rounded-lg cursor-pointer'>
                 <div onClick={changeType} className={selectS ? "border-2 border-grey-200 text-xl p-2 mr-1 bg-blue-300 rounded-lg font-bold text-blue-900  text-center": "mr-1 border-2 border-grey-200 text-xl p-2 font-bold rounded-lg text-blue-900  text-center"} >Send File</div>
                 <div onClick={changeType1} className={selectS ? "border-2 border-grey-200 p-2 rounded-lg font-bold text-blue-900 text-xl text-center": "border-2 border-grey-200 p-2 font-bold bg-blue-300 rounded-lg text-blue-900 text-xl text-center"}>Inbox</div>

@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Download } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Download, Trash2 } from 'lucide-react';
+
 import { supabase } from '@/utils/supabase';
 import { Toaster, toast } from 'sonner';
 import {
@@ -27,6 +28,9 @@ const Inbox = ({ loggedUser }) => {
     const [fileArray, setFileArray] = useState<any>([]);
     const [link, setLink] = useState<any>('');
     const [fileNameToDownload, setFileNameToDownload] = useState<any>('');
+    const [loadingInbox, setLoadingInbox] = useState(true);
+    const [loadingFiles, setLoadingFiles] = useState(false);
+    const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
 
     useEffect(() => {
         console.log(fileArray);
@@ -65,8 +69,7 @@ const Inbox = ({ loggedUser }) => {
 
             if (ErrorFound) {
                 console.log("Error while fetching inbox " + ErrorFound);
-            }
-            else {
+            } else {
                 if (DataFetch && DataFetch.length > 0) {
                     setInbox(DataFetch[0].sent_files_to)
                 }
@@ -74,6 +77,8 @@ const Inbox = ({ loggedUser }) => {
 
         } catch (error) {
             console.log("Error while performing the task " + error);
+        } finally {
+            setLoadingInbox(false);
         }
     }
 
@@ -81,7 +86,7 @@ const Inbox = ({ loggedUser }) => {
         if (logUser) {
             fetchInbox()
         }
-    }, [])
+    }, [logUser])
 
     useEffect(() => {
         if (prS.length > 0 && prR.length > 0) {
@@ -118,6 +123,7 @@ const Inbox = ({ loggedUser }) => {
     };
 
     const fetchFiles = async (senderPrivateKey: any, receiverPrivateKey: any) => {
+        setLoadingFiles(true);
         try {
             const { data, error } = await supabase
                 .storage
@@ -129,15 +135,20 @@ const Inbox = ({ loggedUser }) => {
             } else {
                 if (data && data.length > 0) {
                     setFileArray(data);
+                } else {
+                    setFileArray([]);
                 }
             }
         } catch (error) {
             console.error('Error fetching files', error);
+        } finally {
+            setLoadingFiles(false);
         }
     };
 
     const handleClick = async (email: any) => {
         console.log("Clicked " + email);
+        setSelectedEmail(email); // Set the selected email
         fetchPrivateKeys(email);
     }
 
@@ -187,32 +198,59 @@ const Inbox = ({ loggedUser }) => {
 
     return (
         <>
-            {/* <Toaster richColors /> */}
-            <div className="border-purple-400 border-2">
-                <ul className="p-1 w-84 m-4 shadow-md border-2 border-red-950">
-                    {inbox && inbox.map((name: any, index: number) => {
-                        return (
-                            <li onClick={() => handleClick(name)} key={index} className="p-2 m-0 cursor-pointer border-2 border-blue-400">
-                                {name}
-                                <hr></hr>
-                            </li>
-                        )
-                    })}
-                </ul>
+            <div className="border-gray-200 border-2">
+                {loadingInbox ? <p>Loading...</p> : 
+                <>
+                {inbox && inbox.length > 0 ? (
+                    <ul className="p-1 w-84 m-4 shadow-md">
+                        {inbox && inbox.map((name: any, index: number) => {
+                            return (
+                                <li
+                                    onClick={() => handleClick(name)}
+                                    key={index}
+                                    className={`p-2 m-0 cursor-pointer ${selectedEmail === name ? 'bg-blue-200' : ''}`}
+                                >
+                                    {name}
+                                    <hr></hr>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                    ): 
+                    (
+                    <div className="col-span-3 flex justify-center items-center h-full">
+                      <p className="text-xl font-bold text-gray-500">Your inbox is empty</p>
+                    </div>)
+                }
+                </>
+                }
             </div>
-            <div className="border-blue-400 border-2 w-full col-span-2">
-                {fileArray && fileArray.map((name: any, index: number) => {
-                    return (
-                        <>
-                            <div key={index} className='border-2 p-4 border-red-400 flex justify-between'>
-                                {name.name}
-                                <div onClick={() => { handleDownload(name.name); }}>
-                                    <Download />
-                                </div>
-                            </div>
-                        </>
-                    )
-                })}
+            <div className="border-gray-200 border-2 w-full col-span-2">
+                {loadingFiles ? (
+                    <p>Loading files...</p>
+                ) : (
+                    <>
+                        {selectedEmail ? (
+                            fileArray && fileArray.length > 0 ? (
+                                fileArray.map((name: any, index: number) => (
+                                    <div key={index} className='border-2 p-4 border-red-400 flex justify-between'>
+                                        {name.name}
+                                        <>
+                                        <div className=' flex' onClick={() => { handleDownload(name.name); }}>
+                                            <Trash2 className='mx-4'/>
+                                            <Download />
+                                        </div>
+                                        </>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No files found for the selected user.</p>
+                            )
+                        ) : (
+                            <p>Click on a user to see the files sent by them.</p>
+                        )}
+                    </>
+                )}
             </div>
 
             <AlertDialog
