@@ -83,12 +83,11 @@ const Fileselect = ({ sender, email }) => {
             return; 
         }
         else{
-
             const {data,error} = await supabase
             .storage
             .from('bucket')
             .upload(prR[0]?.private_key+prS[0]?.private_key+'/'+file.name,file)
-    
+            
             try {
                 await fetch("/api/sentfile",{
                     method: "POST",
@@ -118,26 +117,27 @@ const Fileselect = ({ sender, email }) => {
     }
 
     return (
-        <div className='border-2 w-72 h-72 m-12 mx-44'>
-            <Toaster richColors  />
-            <p className="font-bold text-xl mx-6 p-1">Upload the file to send</p>
+        <div className='shadow-xl shadow-gray-400 w-96 h-72 m-12 mx-48 flex flex-col items-center'>
+            <Toaster richColors />
+            <p className="font-bold text-blue-900 text-xl p-2 m-2 text-center">Upload the file to send</p>
+            {currentEmail && <p className='text-blue-900'>To {currentEmail}</p>}
             <input
                 ref={fileInputRef}
-                className="mx-1 my-4 block w-full text-sm text-slate-500
+                className=" shadow-lg rounded-md p-2 my-4 block w-full text-sm text-gray-500
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-full file:border-0
                 file:text-sm file:font-semibold
-                file:bg-blue-50 file:text-blue-700
-                hover:file:bg-blue-100"
+                file:bg-blue-500 file:text-white
+                hover:file:bg-blue-800 cursor-pointer"
                 type="file"
                 onChange={handleFileSelect}
                 accept=".pdf, .doc, .docx, .txt"
             />
-            <Button onClick={sendFileFun} className='mx-20 w-28' colorScheme='blue' variant='solid' size='sm'>
+            <Button onClick={sendFileFun} className='w-28' colorScheme='blue' variant='solid' size='sm'>
                 Send
             </Button>
-            <p>{currentEmail}</p>
         </div>
+
     );
 };
 

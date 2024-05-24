@@ -187,8 +187,8 @@ const Inbox = ({ loggedUser }) => {
 
     return (
         <>
+            {/* <Toaster richColors /> */}
             <div className="border-purple-400 border-2">
-                <Toaster richColors />
                 <ul className="p-1 w-84 m-4 shadow-md border-2 border-red-950">
                     {inbox && inbox.map((name: any, index: number) => {
                         return (
@@ -247,7 +247,7 @@ const Inbox = ({ loggedUser }) => {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-
+            
         </>
     )
 }

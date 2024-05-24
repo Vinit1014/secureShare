@@ -19,17 +19,28 @@ const Search = (props:any) => {
     
     return (
         <div>
-            <input placeholder="Search for sender's email" className="w-72 border-gray-200 border-2 p-1 m-2 ml-4 focus:outline-none shadow-md focus:border-gray-300 focus:border-2 rounded-md" onChange={handleSearchChange}/>
+            {/* <input placeholder="Search for sender's email" className=" border-gray-200 border-2 m-2 ml-4 focus:outline-none shadow-md focus:border-gray-300 focus:border-2 rounded-md" onChange={handleSearchChange}/> */}
+
+            <input
+                placeholder="Search for sender's email"
+                className="w-80 h-12 border-gray-200 border-2 m-2 ml-4 focus:outline-none shadow-md focus:border-gray-300 focus:border-2 rounded-md"
+                onChange={handleSearchChange}
+            />
+
+
             {searchTerm && 
-            <ul className="p-1 w-72 m-2 ml-4 shadow-md"> 
-                    {filteredEmails.map((email: { id: React.Key | null | undefined;  email: string | number | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) => (
-                    <li className="p-1  m-0 cursor-pointer" key={email.id} onClick={()=>{console.log(email.email);
-                    }}>                            
-                        {email.email}
-                        <hr></hr>
-                    </li>
-                    ))}  
-            </ul>}
+
+            <div className='border-2 border-red-500'> 
+                <ul className="p-1 w-72 m-2 ml-4 shadow-md"> 
+                        {filteredEmails.map((email: { id: React.Key | null | undefined;  email: string | number | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) => (
+                            <li className="p-1  m-0 cursor-pointer" key={email.id} onClick={()=>{console.log(email.email);
+                        }}>                            
+                            {email.email}
+                            <hr></hr>
+                        </li>
+                        ))}  
+                </ul>
+            </div>}
         </div>
     )
 }

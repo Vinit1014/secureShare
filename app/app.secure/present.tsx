@@ -5,8 +5,9 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { User } from "next-auth";
 import Inbox from "@/components/Inbox";
 import SendFile from "@/components/SendFile";
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 import { Copy } from 'lucide-react';
+
 
 const Present = () => {
     const [email,setEmail] = useState<any>(null);
@@ -104,12 +105,11 @@ const Present = () => {
 
     return (
         <>
-            <Toaster  closeButton />
-            <div className='grid grid-cols-2 mx-36 mt-20 border-2 border-grey-200 rounded-lg cursor-pointer'>
-                <div onClick={changeType} className={selectS ? "p-2 mr-4 bg-green-300 rounded-lg font-bold text-green-900  text-center": " p-2 font-bold rounded-lg text-green-900  text-center"} >Send File</div>
-                <div onClick={changeType1} className={selectS ? "p-2 rounded-lg font-bold text-green-900  text-center": "p-2 font-bold bg-green-300 rounded-lg text-green-900  text-center"}>Inbox</div>
+            <div className='grid grid-cols-2 mx-36 mt-20 rounded-lg cursor-pointer'>
+                <div onClick={changeType} className={selectS ? "border-2 border-grey-200 text-xl p-2 mr-1 bg-blue-300 rounded-lg font-bold text-blue-900  text-center": "mr-1 border-2 border-grey-200 text-xl p-2 font-bold rounded-lg text-blue-900  text-center"} >Send File</div>
+                <div onClick={changeType1} className={selectS ? "border-2 border-grey-200 p-2 rounded-lg font-bold text-blue-900 text-xl text-center": "border-2 border-grey-200 p-2 font-bold bg-blue-300 rounded-lg text-blue-900 text-xl text-center"}>Inbox</div>
             </div>
-            <div className=" border-2 border-red-400 mx-36 h-96 rounded-md shadow-md grid grid-cols-3">
+            <div className="  mx-36 h-96 rounded-md shadow-xl grid grid-cols-3">
                 {/* <h1 className="border-blue-400 border-2">Welcome</h1> */}
                 {selectS ? 
                     <SendFile/>
