@@ -110,7 +110,7 @@ const Page = () => {
           </button>
         </div>
         <p className="text-center text-sm text-gray-500">
-          Don&apos;t have an account?{" "}  {/* Escaped the single quote here */}
+          Don&apos;t have an account?  
           <Link
             href="/app.secure/register"
             className="font-semibold text-gray-500 transition-colors hover:text-black"
