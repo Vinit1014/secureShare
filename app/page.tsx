@@ -7,7 +7,7 @@ import { useState } from 'react';
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleNavigation = (e) => {
+  const handleNavigation = (e:any) => {
     e.preventDefault();
     setIsLoading(true);
 
