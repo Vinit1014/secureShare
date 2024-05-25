@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { User } from 'next-auth';
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Page = () => {
   const [email, setEmail] = useState('');
@@ -24,16 +26,32 @@ const Page = () => {
   }, []);
 
   const handleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();  // Added this line to prevent default form submission behavior
+    e.preventDefault();
+    
+    if (!email || !password) {
+      toast.error("Email and password cannot be empty.");
+      return;
+    }
+
+    toast.info("Signing in, please wait...");
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+
     if (error) {
+      if (error.message.includes("Invalid login credentials")) {
+        toast.error("Incorrect email or password.");
+      } else {
+        toast.error("Sign in failed.");
+      }
       console.log(error);
       return;
     }
+
     setUser(data.user);
+    toast.success("Sign in successful.");
     router.refresh();
     setEmail('');
     setPassword('');
@@ -42,7 +60,7 @@ const Page = () => {
   console.log({ loading, user });
 
   if (loading) {
-    return <h1>loading..</h1>;
+    return <h1>Loading...</h1>;
   }
 
   if (user) {
@@ -52,11 +70,12 @@ const Page = () => {
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h1 className="text-center font-bold text-3xl">SecureShare</h1>
+        <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sign in to your account
         </h2>
       </div>
-
+        
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <div>
           <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
@@ -109,8 +128,8 @@ const Page = () => {
             Sign in
           </button>
         </div>
-        <p className="text-center text-sm text-gray-500">
-          Don&apos;t have an account?  
+        <p className="text-center text-sm text-gray-500 mt-4">
+          Don&apos;t have an account?{" "}
           <Link
             href="/app.secure/register"
             className="font-semibold text-gray-500 transition-colors hover:text-black"
@@ -119,6 +138,7 @@ const Page = () => {
           </Link>
         </p>
       </div>
+      <ToastContainer />
     </div>
   );
 };
