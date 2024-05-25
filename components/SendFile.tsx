@@ -1,4 +1,4 @@
-// 'use-client'
+// 'use client'
 
 // import { supabase } from "@/utils/supabase"
 // import React, { useState,useEffect } from 'react'
@@ -102,7 +102,7 @@
 
 // export default SendFile
 
-'use-client';
+'use client';
 
 import { supabase } from "@/utils/supabase"
 import React, { useState, useEffect } from 'react'
@@ -173,7 +173,6 @@ const SendFile = () => {
 
   return (
     <>
-      <Toaster richColors />
       <div className="border-gray-200 border-2">
         <input
           placeholder="Search for sender's email"

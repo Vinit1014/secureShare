@@ -166,7 +166,7 @@ const Inbox: React.FC<InboxProps> = ({ loggedUser }) => {
 
     const privateKeyFun = async () => {
         console.log(privateKeyRef.current.value);
-        if (privateKeyRef.current.value == prS[0].private_key) {
+        if (privateKeyRef.current.value == prR[0].private_key) {
             //over here I want to implement handleDownload function
             toast.success("Private key matched")
 

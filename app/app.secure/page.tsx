@@ -55,7 +55,7 @@ const AppSecurePage = () => {
   
   return (  
     <>
-      <Toaster richColors />
+      <Toaster richColors/>
       <Navbar email={user?.email} handleFun={handleLogout}/>
       <Present initialUser={null}/>
     </>

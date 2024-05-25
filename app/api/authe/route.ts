@@ -6,7 +6,7 @@ export async function GET(req:Request, res:Response){
     let { data: User, error } = await supabase
     .from('User')
     .select('email')
-
+    
     return NextResponse.json({message:"Users fetched successfully"})
 }
 // console.log(process.env.NEXT_PUBLIC_SUPABASE_URL);
