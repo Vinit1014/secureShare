@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { User } from 'next-auth'
 import { useEffect, useState } from "react";
 // import { redirect } from 'next/navigation';
-// import AppSecurePage from "../page";
+// import AppSecurePage from "../Page";
 import Link from "next/link";
 
-const page = () => {
+const Page = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
@@ -106,4 +106,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
