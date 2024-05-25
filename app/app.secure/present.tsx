@@ -107,8 +107,8 @@ const Present = () => {
         <>
             
             <div className='grid grid-cols-2 mx-36 mt-20 rounded-lg cursor-pointer'>
-                <div onClick={changeType} className={selectS ? "border-2 border-grey-200 text-xl p-2 mr-1 bg-blue-300 rounded-lg font-bold text-blue-900  text-center": "mr-1 border-2 border-grey-200 text-xl p-2 font-bold rounded-lg text-blue-900  text-center"} >Send File</div>
-                <div onClick={changeType1} className={selectS ? "border-2 border-grey-200 p-2 rounded-lg font-bold text-blue-900 text-xl text-center": "border-2 border-grey-200 p-2 font-bold bg-blue-300 rounded-lg text-blue-900 text-xl text-center"}>Inbox</div>
+                <div onClick={changeType} className={selectS ? "border-2 border-grey-200 text-xl p-2 mr-1 bg-blue-100 rounded-lg font-bold text-blue-900  text-center": "mr-1 border-2 border-grey-200 text-xl p-2 font-bold rounded-lg text-blue-900  text-center"} >Send File</div>
+                <div onClick={changeType1} className={selectS ? "border-2 border-grey-200 p-2 rounded-lg font-bold text-blue-900 text-xl text-center": "border-2 border-grey-200 p-2 font-bold bg-blue-100 rounded-lg text-blue-900 text-xl text-center"}>Inbox</div>
             </div>
             <div className="  mx-36 h-96 rounded-md shadow-xl grid grid-cols-3">
                 {/* <h1 className="border-blue-400 border-2">Welcome</h1> */}

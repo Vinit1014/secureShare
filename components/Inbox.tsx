@@ -13,6 +13,7 @@ import {
     AlertDialogCloseButton,
     useDisclosure,
     Button,
+    CircularProgress
 } from '@chakra-ui/react';
 
 const Inbox = ({ loggedUser }) => {
@@ -104,7 +105,7 @@ const Inbox = ({ loggedUser }) => {
             if (privateKeyError) {
                 console.error("Could not fetch sender's private key", privateKeyError);
             } else {
-                setPrS(privateKeyData);
+                setPrR(privateKeyData);
             }
 
             const { data: privateKeyData1, error: privateKeyError1 } = await supabase
@@ -115,7 +116,7 @@ const Inbox = ({ loggedUser }) => {
             if (privateKeyError1) {
                 console.error("Could not fetch receiver's private key", privateKeyError1);
             } else {
-                setPrR(privateKeyData1);
+                setPrS(privateKeyData1);
             }
         } catch (error) {
             console.error('Error fetching private keys', error);
@@ -129,7 +130,8 @@ const Inbox = ({ loggedUser }) => {
                 .storage
                 .from('bucket')
                 .list(receiverPrivateKey + senderPrivateKey);
-
+                // .list(senderPrivateKey + receiverPrivateKey);
+                
             if (error) {
                 console.log("Error fetching files: ", error);
             } else {
@@ -192,14 +194,30 @@ const Inbox = ({ loggedUser }) => {
         onClose(); // Close the overlay after processing
     }
 
+    const handleDelete = async(name: any)=>{
+        console.log("Deleted "+name);
+        const res = await supabase
+        .storage
+        .from('bucket')
+        .remove([`${prR[0].private_key}` + `${prS[0].private_key}` + `/${name}`])
+
+        if (res) {
+            toast.success("Deleted successfully");
+            fetchFiles(prS[0].private_key, prR[0].private_key);
+            console.log("Deleted successfully");
+        }
+    }
+
     useEffect(() => {
-        console.log("PRivate key entered is " + privateKeyRef.current.value);
+        console.log("Private key entered is " + privateKeyRef.current.value);
     }, [privateKeyRef])
 
     return (
         <>
             <div className="border-gray-200 border-2">
-                {loadingInbox ? <p>Loading...</p> : 
+                {loadingInbox ? <div className='m-6 flex justify-center'>
+        <CircularProgress isIndeterminate color='blue.300' />
+      </div> : 
                 <>
                 {inbox && inbox.length > 0 ? (
                     <ul className="p-1 w-84 m-4 shadow-md">
@@ -208,7 +226,7 @@ const Inbox = ({ loggedUser }) => {
                                 <li
                                     onClick={() => handleClick(name)}
                                     key={index}
-                                    className={`p-2 m-0 cursor-pointer ${selectedEmail === name ? 'bg-blue-200' : ''}`}
+                                    className={`p-2 m-0 cursor-pointer ${selectedEmail === name ? 'bg-blue-100' : ''}`}
                                 >
                                     {name}
                                     <hr></hr>
@@ -227,27 +245,33 @@ const Inbox = ({ loggedUser }) => {
             </div>
             <div className="border-gray-200 border-2 w-full col-span-2">
                 {loadingFiles ? (
-                    <p>Loading files...</p>
+                    <div className='m-6 flex justify-center'>
+                    <CircularProgress isIndeterminate color='blue.300' />
+                  </div>
                 ) : (
                     <>
                         {selectedEmail ? (
                             fileArray && fileArray.length > 0 ? (
                                 fileArray.map((name: any, index: number) => (
-                                    <div key={index} className='border-2 p-4 border-red-400 flex justify-between'>
+                                    <>
+                                    <div key={index} className='p-4 flex justify-between'>
                                         {name.name}
                                         <>
-                                        <div className=' flex' onClick={() => { handleDownload(name.name); }}>
-                                            <Trash2 className='mx-4'/>
-                                            <Download />
+                                        <div className=' flex'>
+                                            <Trash2 className='mx-4 cursor-pointer' onClick={()=>{handleDelete(name.name);}}/>
+                                            <Download className='cursor-pointer' onClick={() => { handleDownload(name.name); }}/>
                                         </div>
                                         </>
+
                                     </div>
+                                    <hr></hr>
+                                    </>
                                 ))
                             ) : (
-                                <p>No files found for the selected user.</p>
+                                <p className='m-4'>No files found for the selected user.</p>
                             )
                         ) : (
-                            <p>Click on a user to see the files sent by them.</p>
+                            <p className='m-4'>Click on a user to see the files sent by them.</p>
                         )}
                     </>
                 )}

@@ -30,8 +30,7 @@ const AppSecurePage = () => {
   if (loading){
     return(
       <div className='m-6 flex justify-center'>
-        <CircularProgress isIndeterminate color='green.300' />
-        
+        <CircularProgress isIndeterminate color='blue.300' />
       </div>
     )
   }
