@@ -16,7 +16,11 @@ import {
     CircularProgress
 } from '@chakra-ui/react';
 
-const Inbox = ({ loggedUser }) => {
+interface InboxProps {
+    loggedUser: string | null;
+}
+
+const Inbox: React.FC<InboxProps> = ({ loggedUser }) => {
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = React.useRef<any>();
@@ -95,7 +99,7 @@ const Inbox = ({ loggedUser }) => {
         }
     }, [prS, prR]);
 
-    const fetchPrivateKeys = async (email) => {
+    const fetchPrivateKeys = async (email:any) => {
         try {
             const { data: privateKeyData, error: privateKeyError } = await supabase
                 .from('User')
